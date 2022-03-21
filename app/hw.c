@@ -63,6 +63,7 @@
 #include <locale.h>
 
 extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim2;
 extern ADC_HandleTypeDef hadc1;
 extern ADC_ChannelConfTypeDef sConfig = {0};
 
@@ -213,6 +214,17 @@ void hw_timer_stop(void) {
 	HAL_TIM_Base_Stop_IT(&htim1);
 }
 
+void hw_timer2_stop(void)
+{
+	HAL_TIM_Base_Stop_IT(&htim2);
+}
+
+void hw_timer2_start(void) {
+	//__HAL_TIM_SET_AUTORELOAD(&htim1, 1999)
+	//__HAL_TIM_SET_COUTER(&htim1, 0);
+	HAL_TIM_Base_Start_IT(&htim2);
+}
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == &htim1) {
 		//hw_led_toggle();
@@ -223,6 +235,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		uint16_t result_average_FFC5 = app_average_matriz(adc_read_ffc5);
 */
 		app_output_ode_data();//result_average_FFC5);//adc_read_ffc5);
+	}
+
+	if (htim == &htim2) {
+		app_timer_tick();
 	}
 }
 

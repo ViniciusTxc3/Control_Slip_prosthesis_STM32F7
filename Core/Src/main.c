@@ -62,17 +62,11 @@ static void MX_TIM1_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
-void timer_tick();
-uint8_t process_bebionic_commands(uint8_t *Buf);
-uint8_t ledFlag = 0;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void timer_tick() // function called by the timer once an interrupt is triggered
-{
-  bebionic_process_timer(); // calls the function that handles the actions of the bebionic
-}
+
 /* USER CODE END 0 */
 
 /**
@@ -109,13 +103,7 @@ int main(void)
   MX_USB_DEVICE_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  // app_init(); // Funções de inicialização na pasta app para não misturar
-
-  usb_send_buffer[0] = PKG_ST;
-  usb_send_buffer[1] = PKG_ET;
-
-  // stop the timer
-  HAL_TIM_Base_Stop_IT(&htim2);
+  app_init(); // Funções de inicialização na pasta app para não misturar
 
   /* USER CODE END 2 */
 
@@ -123,11 +111,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    if (usb_command_received == 1)
-    {
-      usb_command_received = 0;                  // reset the usb command received
-      bebionic_process_commands(usb_rcv_buffer); // pass the usb buffer to be processed
-    }
+	app_controle_bebionic(); // teste para controle da prótese
     // app_loop(); // Funções do loop na pasta app para não misturar
     /* USER CODE END WHILE */
 

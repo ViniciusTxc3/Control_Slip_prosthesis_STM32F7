@@ -16,6 +16,8 @@ void hw_cpu_sleep(void);
 uint32_t hw_tick_ms_get(void);
 void hw_timer_start(void);
 void hw_timer_stop(void);
+void hw_timer2_stop(void);
+void hw_timer2_start(void);
 void hw_adc_start(void);
 void hw_adc_calibration(void);
 void hw_adc_read_single(uint8_t _channel, uint16_t *adc_val);

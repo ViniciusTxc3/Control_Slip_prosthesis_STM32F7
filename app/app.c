@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include "odesolver.h"
 #include <locale.h>
+#include "definitions.h"
+#include "bebionic.h"
 
 // Variaveis modelo ode
 #define N_NEURONS 16
@@ -37,11 +39,21 @@ bool app_started = false;
 
 uint16_t adc_raw_data[ADC_SAMPLES_N] = { 0 };
 
+uint8_t process_bebionic_commands(uint8_t *Buf);
+uint8_t ledFlag = 0;
+
 void app_init(void) {
+	/*
 	app_init_ode_solver();
 	hw_adc_calibration();
 	hw_timer_start();
 	app_started = true;
+	*/
+	usb_send_buffer[0] = PKG_ST;
+	usb_send_buffer[1] = PKG_ET;
+
+	  // stop the timer
+	hw_timer2_stop(); // teste para controle da protese
 }
 
 void app_loop(void) {
@@ -195,4 +207,18 @@ void app_example_read_adc_samples(ode_data_type * input_currents, int num_channe
 	}
 	//Adiciona só uma corrente ao final ao canal 2. 0.5 é um ganho que vai ter que ser ajustado.
 	input_currents[1] = (0.5f * 1024); // No caso o ADC leu o valor 1024
+}
+
+void app_controle_bebionic(void)
+{
+	if (usb_command_received == 1)
+	    {
+	      usb_command_received = 0;                  // reset the usb command received
+	      bebionic_process_commands(usb_rcv_buffer); // pass the usb buffer to be processed
+	    }
+}
+
+void app_timer_tick(void) // function called by the timer once an interrupt is triggered
+{
+  bebionic_process_timer(); // calls the function that handles the actions of the bebionic
 }

@@ -34,7 +34,7 @@ app/app.o: ../app/app.c ../app/app.h ../Core/Inc/main.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pcd.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_usb.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pcd_ex.h ../app/hw.h \
- ../app/odesolver.h
+ ../app/odesolver.h ../app/definitions.h ../app/bebionic.h
 
 ../app/app.h:
 
@@ -113,3 +113,7 @@ app/app.o: ../app/app.c ../app/app.h ../Core/Inc/main.h \
 ../app/hw.h:
 
 ../app/odesolver.h:
+
+../app/definitions.h:
+
+../app/bebionic.h:

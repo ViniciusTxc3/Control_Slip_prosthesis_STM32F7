@@ -1,0 +1,4 @@
+bebionic.c:29:6:bebionic_process_timer	8	static
+bebionic.c:75:9:bebionic_process_commands	24	static
+bebionic.c:134:9:bebionic_th_open_hand	16	static
+bebionic.c:158:9:bebionic_th_close_hand	16	static

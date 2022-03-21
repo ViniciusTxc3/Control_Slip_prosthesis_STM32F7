@@ -1,0 +1,15 @@
+odesolver.c:28:7:model_parameters_is_valid	24	static
+odesolver.c:35:14:ode1_step	56	static
+odesolver.c:76:6:is_base_model_equal	16	static
+odesolver.c:93:14:alpha_function_model	32	static
+odesolver.c:114:14:alpha_function_alloc	40	static
+odesolver.c:149:14:alpha_function_free	16	static
+odesolver.c:160:6:is_alpha_model_equal	24	static
+odesolver.c:183:14:izhikevich_model	32	static
+odesolver.c:213:14:izhikevich_alloc	48	static
+odesolver.c:256:6:is_izhikevich_model_equal	24	static
+odesolver.c:271:6:izhikevich_free	16	static
+odesolver.c:281:14:izhikevich_step	24	static
+odesolver.c:323:15:process_neuron_step	32	static
+odesolver.c:345:15:process_neuron_set_step	40	static
+odesolver.c:363:14:fill_neuron_set	56	static

@@ -10,16 +10,18 @@
  * 			file:///C:/Users/vinic/AppData/Local/Temp/nucleo-f767zi.pdf
  * 			file:///C:/Users/vinic/AppData/Local/Temp/dm00244518-stm32-nucleo144-boards-mb1137-stmicroelectronics.pdf
  * 			https://docs.google.com/document/u/0/d/1oI5DEEcAGrtcy6bprIj_35AK4aKURbOCSm3-ezbdbmk/mobilebasic
+ *			https://embeddedexpert.io/
+ *			https://github.com/micropython/micropython/tree/master/ports/stm32/boards/NUCLEO_F767ZI
  */
 /* CONECTOR FFC5:
  * Pinos usados na conexão Nucleo F7 e uC (LINHAS) - Pins Arduino
  * L1:	PA_3 (ADC1/3) - A0
  * L2:	PC_0 (ADC1/10) - A1
  * L3:	PC_3 (ADC1/13) - A2
- * L4:	PA_7 (ADC1/7) -
+ * L4:	PA_7 (ADC1/7) - COMP
  *
  * Pinos usados na conexão Nucleo F7 e uC (COLUNAS)
- * COL1		COL2	COL3	COL4
+ * COL1/in_c1(PA15)		COL2/in_c2(PA12->PB7)	COL3/in_c3(PA11-PB6)	COL4/in_c4(PA10)
  * PF_13	PE_9	PE_11	PF_14
  *
  * Pinos STM32F103
@@ -51,6 +53,19 @@
  * SOBRE USB:
  * Configurar .ioc corretamente como nesse programa
  * Alterar pasta: usbd_cdc_if.c conforme tutorial nas referências acima (ST USB Device Libary)
+ *
+ * ----------------------------------------------------------------------------------------------------
+ * ACELERÔMETRO:
+ * https://waime.wordpress.com/2015/03/15/basic-measurement-with-accelerometer-gy-61-with-adxl335-chip/
+ * https://5.imimg.com/data5/SC/UG/MY-1833510/gy-61-adxl335-3-axis-accelerometer-module.pdf
+ * http://blog.kevix.co.uk/2013/10/gy-61-accelerometer-setup-and-test.html
+ * http://www.esp32learning.com/code/esp32-and-adxl335-accelerometer-example.php
+ * https://www.sparkfun.com/datasheets/Components/SMD/adxl335.pdf
+ * -----------------------------------------------------------------------------------------------------
+ * BEBIONIC:
+ * PD14 - Fio amarelo
+ * PD15 - Fio Azul
+ * GND - Fio verde
  */
 
 #include <stdint.h>
@@ -68,41 +83,45 @@ extern ADC_HandleTypeDef hadc1;
 extern ADC_ChannelConfTypeDef sConfig = {0};
 
 void hw_adc_start(void) {
-	HAL_ADC_Start(&hadc1);
+	//HAL_ADC_Start(&hadc1);
 	//HAL_ADC_Start_IT(&hadc1); // Se for por timer
 }
 
 void hw_Select_ch1(void) {
+	ADC_ChannelConfTypeDef sConfig = {0};
 	sConfig.Channel = ADC_CHANNEL_3;
-	sConfig.Rank = ADC_REGULAR_RANK_1;
-	//sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
+	sConfig.Rank = 1; //ADC_REGULAR_RANK_1;
+	sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
 	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) {
 		Error_Handler();
 	}
 }
 
 void hw_Select_ch2(void) {
+	ADC_ChannelConfTypeDef sConfig = {0};
 	sConfig.Channel = ADC_CHANNEL_7;
-	sConfig.Rank = ADC_REGULAR_RANK_2;
-	//sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
+	sConfig.Rank = 1; //ADC_REGULAR_RANK_2;
+	sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
 	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) {
 		Error_Handler();
 	}
 }
 
 void hw_Select_ch3(void) {
+	ADC_ChannelConfTypeDef sConfig = {0};
 	sConfig.Channel = ADC_CHANNEL_10;
-	sConfig.Rank = ADC_REGULAR_RANK_3;
-	//sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
+	sConfig.Rank = 1; //ADC_REGULAR_RANK_3;
+	sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
 	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) {
 		Error_Handler();
 	}
 }
 
 void hw_Select_ch4(void) {
+	ADC_ChannelConfTypeDef sConfig = {0};
 	sConfig.Channel = ADC_CHANNEL_13;
-	sConfig.Rank = ADC_REGULAR_RANK_4;
-	//sConfig.SamplingTime = ADC_SAMPLETIME_15CYCLES;
+	sConfig.Rank = 1; //ADC_REGULAR_RANK_4;
+	sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
 	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) {
 		Error_Handler();
 	}
@@ -166,11 +185,11 @@ uint32_t hw_tick_ms_get(void) {
 }
 
 void hw_cpu_sleep(void) {
-	/*
+
 	 HAL_SuspendTick(); // Outro modo que não fica utilizando o Tick
 	 HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
 	 HAL_ResumeTick();
-	 */
+
 	__WFI(); // Recurso do cortex para econômia de energia e acorda quando acontece interrupção
 }
 
@@ -203,7 +222,10 @@ void hw_led_state_set(bool _state) {
 void hw_delay_ms(uint32_t _time_ms) {
 	HAL_Delay(_time_ms);
 }
-
+// Clock: 108M Hz
+// Preescaler: 54000 - 1
+// Counter period: 2 - 1
+// Timer: 1 ms
 void hw_timer_start(void) {
 	//__HAL_TIM_SET_AUTORELOAD(&htim1, 1999)
 	//__HAL_TIM_SET_COUTER(&htim1, 0);
@@ -229,12 +251,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == &htim1) {
 		//hw_led_toggle();
 
-		/*
+
 		uint16_t adc_read_ffc5[16] = {0};
 		app_leitura_matriz_FFC5(adc_read_ffc5);
 		uint16_t result_average_FFC5 = app_average_matriz(adc_read_ffc5);
-*/
-		app_output_ode_data();//result_average_FFC5);//adc_read_ffc5);
+
+	//	app_output_ode_data();//result_average_FFC5);//adc_read_ffc5);
 	}
 
 	if (htim == &htim2) {
@@ -283,12 +305,25 @@ void hw_get_pins_col_FFC5(uint8_t _pin) {
 	}
 }
 
-uint8_t hw_usb_rx(uint8_t _Buf,int32_t _Len)
+void hw_usb_init(void)
+{
+//	CDC_Init_FS();
+	//int8_t _usb_init = CDC_Init_FS();
+}
+
+uint8_t hw_usb_rx(uint8_t* _Buf,uint16_t _Len)
 {
 	return CDC_Receive_FS(_Buf, _Len);
 }
 
-uint8_t hw_usb_tx(uint8_t _Buf,int32_t _Len)
+uint8_t hw_usb_tx(uint8_t* _Buf,uint16_t _Len)
 {
+//	uint8_t message[_Len];
+//	for(uint8_t i = 0; i < _Len; i++)
+//	{
+//		message[i] = _Buf[i];
+//	}
+
 	return CDC_Transmit_FS(_Buf, _Len);
+//	return CDC_Transmit_FS(&_Buf, _Len);
 }

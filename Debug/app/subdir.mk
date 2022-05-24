@@ -8,18 +8,21 @@ C_SRCS += \
 ../app/app.c \
 ../app/bebionic.c \
 ../app/hw.c \
+../app/izihikevich.c \
 ../app/odesolver.c 
 
 OBJS += \
 ./app/app.o \
 ./app/bebionic.o \
 ./app/hw.o \
+./app/izihikevich.o \
 ./app/odesolver.o 
 
 C_DEPS += \
 ./app/app.d \
 ./app/bebionic.d \
 ./app/hw.d \
+./app/izihikevich.d \
 ./app/odesolver.d 
 
 

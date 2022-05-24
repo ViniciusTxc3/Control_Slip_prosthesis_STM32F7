@@ -19,6 +19,8 @@ void app_init_ode_solver(void);
 void app_output_ode_data(void);//uint16_t input_currents);//[]);
 void app_controle_bebionic(void);
 void app_timer_tick(void);
+void app_get_neurons(uint16_t* adc_read_ffcX);
+void timerADC_old(void);
 
 
 #endif /* APP_H_ */

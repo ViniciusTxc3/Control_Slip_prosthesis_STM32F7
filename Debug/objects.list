@@ -39,4 +39,5 @@
 "./app/app.o"
 "./app/bebionic.o"
 "./app/hw.o"
+"./app/izihikevich.o"
 "./app/odesolver.o"

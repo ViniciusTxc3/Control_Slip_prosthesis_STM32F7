@@ -27,7 +27,8 @@ void hw_Select_ch1(void);
 void hw_Select_ch2(void);
 void hw_Select_ch3(void);
 void hw_Select_ch4(void);
-uint8_t hw_usb_rx(uint8_t _Buf,int32_t _Len);
-uint8_t hw_usb_tx(uint8_t _Buf,int32_t _Len);
+void hw_usb_init(void);
+uint8_t hw_usb_rx(uint8_t* _Buf,uint16_t _Len);
+uint8_t hw_usb_tx(uint8_t* _Buf,uint16_t _Len);
 
 #endif /* HW_H_ */

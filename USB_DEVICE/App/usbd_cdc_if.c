@@ -283,18 +283,18 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   usb_command_received = 1;
 
   return (USBD_OK);
-	/*
-	 extern void app_usb_cbk(uint8_t *buf, uint32_t len);
 
-	 if (*Len > 0)
-	 {
-	 app_usb_cbk(BFuf, *Len);
-	 }
-	 */
+//	 extern void app_usb_cbk(uint8_t *buf, uint32_t len);
+//
+//	 if (*Len > 0)
+//	 {
+//		 app_usb_cbk(BFuf, *Len);
+//	 }
+//
+//	 USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
+//	 USBD_CDC_ReceivePacket(&hUsbDeviceFS);
+//	 return (USBD_OK);
 
-	// USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
-	// USBD_CDC_ReceivePacket(&hUsbDeviceFS);
-	// return (USBD_OK);
   /* USER CODE END 6 */
 }
 
@@ -313,15 +313,14 @@ uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
 {
   uint8_t result = USBD_OK;
   /* USER CODE BEGIN 7 */
-	USBD_CDC_HandleTypeDef *hcdc =
-			(USBD_CDC_HandleTypeDef*) hUsbDeviceFS.pClassData;
+	USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*) hUsbDeviceFS.pClassData;
 	if (hcdc->TxState != 0) {
 		return USBD_BUSY;
 	}
 
-	if (Buf == 0 || Len == 0) /* testing here and not insied SBD_CDC_TransmitPacket */
-		return USBD_FAIL;
-
+//	if (Buf == 0 || Len == 0) /* testing here and not insied SBD_CDC_TransmitPacket */
+//		return USBD_FAIL;
+//
 	cdc_wait_usb = true;
 
 	USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len);
